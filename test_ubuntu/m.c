@@ -123,7 +123,9 @@ int main (void)
     /* Close the file */
     f_close(&fil);
 
-    fr = f_open(&fil, "logfile.txt", FA_READ | FA_OPEN_ALWAYS);
+    f_rename("logfile.txt", "mylog.txt");
+
+    fr = f_open(&fil, "mylog.txt", FA_READ | FA_OPEN_ALWAYS);
     if (fr) return 1;
     f_read(&fil, work, 100, &rn);
     printf("rn=%d:%s\n", rn, work);
