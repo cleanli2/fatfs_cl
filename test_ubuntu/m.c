@@ -1,4 +1,5 @@
 #include "ff.h"
+#include "m.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -65,6 +66,7 @@ void v_r_sec(int n, char*buf)
         if(v_secs_list[i]==n){
             memcpy(buf, v_secs_data[i], 512);
             printf("data found\n");
+            mem_print(buf, n*512, 512);
             return;
         }
     }
@@ -74,6 +76,7 @@ void v_r_sec(int n, char*buf)
 
 void v_w_sec(int n, char*buf)
 {
+    mem_print(buf, n*512, 512);
     for(int i=0;i<vnp;i++){
         if(v_secs_list[i]==n){
             memcpy(v_secs_data[i], buf, 512);
@@ -87,6 +90,42 @@ void v_w_sec(int n, char*buf)
     vnp++;
 }
 
+
+void mem_print(const char*buf, uint32_t ct_start, uint32_t len)
+{
+    const char*line_stt = buf;
+    uint32_t left=len, line_len;
+
+    printf("\nMemShow Start:");
+    while(left){
+        int j, li;
+        line_len = left>16?16:left;
+        li=line_len;
+        printf("\n%08x: ", ct_start);
+        j=0;
+        while(li--){
+            printf("%02x",line_stt[j]&0xff);
+            printf(j == 7 ? "-":" ");
+            j++;
+        }
+        li=line_len;
+        j=0;
+        printf(" ");
+        while(li--){
+            if(line_stt[j]>=0x20 && line_stt[j]<0x7f){
+                printf("%c", line_stt[j]);
+            }
+            else{
+                printf("_");
+            }
+            j++;
+        }
+        left-=line_len;
+        line_stt+=line_len;
+        ct_start+=line_len;
+    }
+    printf("\nMemShow End:\n");
+}
 
 // end of v disk
 
@@ -103,6 +142,7 @@ int main (void)
     v_init();
 
     /* Format the default drive with default parameters */
+    printf("======mkfs======\n");
     res = f_mkfs("", 0, work, sizeof work);
     if (res){
         printf("fmkfs fail %d\n", res);
@@ -111,19 +151,30 @@ int main (void)
     else{
         printf("fmkfs done OK\n");
     }
+    printf("======mkfs done======\n");
 
     /* Open or create a log file and ready to append */
+    printf("======mount======\n");
     f_mount(&fs, "", 0);
+    printf("======mount done======\n");
+    printf("======openappend======\n");
     fr = open_append(&fil, "logfile.txt");
     if (fr != FR_OK) return 1;
+    printf("======openappend done======\n");
 
     /* Append a line */
+    printf("======fprint======\n");
     f_printf(&fil, "%02u/%02u/%u, %2u:%02u\n", 3, 4, 2022, 12, 39);
+    printf("======fprint done======\n");
 
     /* Close the file */
+    printf("======fclose======\n");
     f_close(&fil);
+    printf("======fclose done======\n");
 
+    printf("======rename======\n");
     f_rename("logfile.txt", "mylog.txt");
+    printf("======rename done======\n");
 
     fr = f_open(&fil, "mylog.txt", FA_READ | FA_OPEN_ALWAYS);
     if (fr) return 1;
