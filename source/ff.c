@@ -22,6 +22,7 @@
 #include <string.h>
 #include "ff.h"			/* Declarations of FatFs API */
 #include "diskio.h"		/* Declarations of device I/O functions */
+#include "m.h"
 
 
 /*--------------------------------------------------------------------------
@@ -5909,6 +5910,7 @@ FRESULT f_mkfs (
 	FRESULT res;
 
 
+    PRT_LINE;
 	/* Check mounted drive and clear work area */
 	vol = get_ldnumber(&path);					/* Get target logical drive */
 	if (vol < 0) return FR_INVALID_DRIVE;
@@ -5933,6 +5935,7 @@ FRESULT f_mkfs (
 	ss = FF_MAX_SS;
 #endif
 
+    PRT_LINE;
 	/* Options for FAT sub-type and FAT parameters */
 	fsopt = opt->fmt & (FM_ANY | FM_SFD);
 	n_fat = (opt->n_fat >= 1 && opt->n_fat <= 2) ? opt->n_fat : 1;
@@ -5949,12 +5952,15 @@ FRESULT f_mkfs (
 #endif
 	if (!buf) return FR_NOT_ENOUGH_CORE;
 
+    PRT_LINE;
 	/* Determine where the volume to be located (b_vol, sz_vol) */
 	b_vol = sz_vol = 0;
 	if (FF_MULTI_PARTITION && ipart != 0) {	/* Is the volume associated with any specific partition? */
 		/* Get partition location from the existing partition table */
 		if (disk_read(pdrv, buf, 0, 1) != RES_OK) LEAVE_MKFS(FR_DISK_ERR);	/* Load MBR */
+        PRT_LINE;
 		if (ld_word(buf + BS_55AA) != 0xAA55) LEAVE_MKFS(FR_MKFS_ABORTED);	/* Check if MBR is valid */
+        PRT_LINE;
 #if FF_LBA64
 		if (buf[MBR_Table + PTE_System] == 0xEE) {	/* GPT protective MBR? */
 			DWORD n_ent, ofs;
@@ -5986,6 +5992,7 @@ FRESULT f_mkfs (
 			sz_vol = ld_dword(pte + PTE_SizLba);	/* Get volume size */
 		}
 	} else {	/* The volume is associated with a physical drive */
+    PRT_LINE;
 		if (disk_ioctl(pdrv, GET_SECTOR_COUNT, &sz_vol) != RES_OK) LEAVE_MKFS(FR_DISK_ERR);
 		if (!(fsopt & FM_SFD)) {	/* To be partitioned? */
 			/* Create a single-partition on the drive in this function */
@@ -6002,6 +6009,7 @@ FRESULT f_mkfs (
 			}
 		}
 	}
+    PRT_LINE;
 	if (sz_vol < 128) LEAVE_MKFS(FR_MKFS_ABORTED);	/* Check if volume size is >=128s */
 
 	/* Now start to create an FAT volume at b_vol and sz_vol */

@@ -79,7 +79,7 @@ void v_w_sec(int n, char*buf)
             return;
         }
     }
-    printf("no data, %d used\n");
+    printf("no data, %d used\n", vnp);
     v_secs_list[vnp]=n;
     memcpy(v_secs_data[vnp], buf, 512);
     vnp++;
@@ -98,6 +98,7 @@ int main (void)
     UINT bw;            /* Bytes written */
     BYTE work[FF_MAX_SS]; /* Work area (larger is better for processing time) */
 
+    v_init();
 
     /* Format the default drive with default parameters */
     res = f_mkfs("", 0, work, sizeof work);

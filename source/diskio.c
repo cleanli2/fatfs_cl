@@ -72,7 +72,6 @@ DSTATUS disk_initialize (
 	int result=0;
     printf("%s:pdrv=%d\n", __func__, pdrv);
     do_backtrace();
-    v_init();
     return result;
 
 #if 0
@@ -197,9 +196,9 @@ DRESULT disk_write (
 {
 	DRESULT res;
 	int result=0;
-    printf("%s:pdrv=%d\n", __func__, pdrv);
-    do_backtrace();
-    v_r_sec(sector, buff);
+    printf("%s:pdrv=%d sec=%d count=%d\n", __func__, pdrv, sector, count);
+    //do_backtrace();
+    v_w_sec(sector, buff);
     return result;
 
 #if 0
@@ -249,9 +248,26 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
+    DWORD sz_drv=2048, lba, lba2, sz_eblk=1, sz_sec=512, pns = 1;
 	DRESULT res;
 	int result=0;
-    printf("%s:pdrv=%d\n", __func__, pdrv);
+    printf("%s:pdrv=%d cmd=%d\n", __func__, pdrv, cmd);
+    switch(cmd){
+        case GET_SECTOR_SIZE:
+            memcpy(buff, &sz_sec, sizeof(DWORD));
+            break;
+        case GET_BLOCK_SIZE:
+            memcpy(buff, &sz_eblk, sizeof(DWORD));
+            break;
+        case GET_SECTOR_COUNT:
+            memcpy(buff, &sz_drv, sizeof(DWORD));
+            break;
+        case CTRL_SYNC:
+            break;
+        default:
+            printf("unknown cmd %d\n", cmd);
+            break;
+    }
     return result;
 
 #if 0
