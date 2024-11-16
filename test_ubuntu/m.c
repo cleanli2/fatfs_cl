@@ -44,6 +44,51 @@ FRESULT open_append (
 }
 
 
+//v disk
+#define V_DISK_N 100
+int v_secs_list[V_DISK_N]={0};
+char v_secs_data[V_DISK_N][512]={0};
+int vnp=0;
+
+void v_init()
+{
+    for(int i=0;i<V_DISK_N;i++){
+        v_secs_list[i]=-1;
+    }
+}
+
+void v_r_sec(int n, char*buf)
+{
+    for(int i=0;i<vnp;i++){
+        if(v_secs_list[i]==n){
+            memcpy(buf, v_secs_data[i], 512);
+            printf("data found\n");
+            return;
+        }
+    }
+    printf("no data\n");
+    memset(buf, 0, 512);
+}
+
+void v_w_sec(int n, char*buf)
+{
+    for(int i=0;i<vnp;i++){
+        if(v_secs_list[i]==n){
+            memcpy(v_secs_data[i], buf, 512);
+            printf("w data found\n");
+            return;
+        }
+    }
+    printf("no data, %d used\n");
+    v_secs_list[vnp]=n;
+    memcpy(v_secs_data[vnp], buf, 512);
+    vnp++;
+}
+
+
+// end of v disk
+
+
 int main (void)
 {
     FRESULT fr;

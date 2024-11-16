@@ -9,7 +9,7 @@
 
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
-void do_backtrace();
+#include "m.h"
 
 /* Definitions of physical drive number for each drive */
 #define DEV_RAM		0	/* Example: Map Ramdisk to physical drive 0 */
@@ -72,6 +72,7 @@ DSTATUS disk_initialize (
 	int result=0;
     printf("%s:pdrv=%d\n", __func__, pdrv);
     do_backtrace();
+    v_init();
     return result;
 
 #if 0
@@ -117,6 +118,7 @@ DRESULT disk_read (
 	DRESULT res;
 	int result=0;
     memset(buff, 0, 512);
+#if 0
     if(sector==0){
 #if 0
 1C0: 21 00 0B FE FF FF 20 00-00 00 00 6F 47 07 00 00  !_____ ____oG___
@@ -136,10 +138,12 @@ DRESULT disk_read (
         buff[0x1fe]=0x55;
         buff[0x1ff]=0xaa;
     }
+#endif
     printf("%s:pdrv=%d sec=%d n=%d\n", __func__, pdrv, sector, count);
-    printf("level 0 addr %p \n", __builtin_return_address(0));
-    printf("level 1 addr %p \n", __builtin_return_address(1));
-    do_backtrace();
+    //printf("level 0 addr %p \n", __builtin_return_address(0));
+    //printf("level 1 addr %p \n", __builtin_return_address(1));
+    //do_backtrace();
+    v_r_sec(sector, buff);
     return result;
 
 #if 0
@@ -195,6 +199,7 @@ DRESULT disk_write (
 	int result=0;
     printf("%s:pdrv=%d\n", __func__, pdrv);
     do_backtrace();
+    v_r_sec(sector, buff);
     return result;
 
 #if 0
