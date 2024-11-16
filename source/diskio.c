@@ -10,6 +10,7 @@
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
 #include "m.h"
+#include <string.h>
 
 /* Definitions of physical drive number for each drive */
 #define DEV_RAM		0	/* Example: Map Ramdisk to physical drive 0 */
@@ -25,7 +26,7 @@ DSTATUS disk_status (
 	BYTE pdrv		/* Physical drive nmuber to identify the drive */
 )
 {
-	DSTATUS stat;
+	//DSTATUS stat;
 	int result=0;
     printf("%s:pdrv=%d\n", __func__, pdrv);
     //do_backtrace();
@@ -68,7 +69,7 @@ DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
-	DSTATUS stat;
+	//DSTATUS stat;
 	int result=0;
     printf("%s:pdrv=%d\n", __func__, pdrv);
     //do_backtrace();
@@ -114,9 +115,8 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
-	DRESULT res;
+	//DRESULT res;
 	int result=0;
-    memset(buff, 0, 512);
 #if 0
     if(sector==0){
 #if 0
@@ -142,7 +142,7 @@ DRESULT disk_read (
     //printf("level 0 addr %p \n", __builtin_return_address(0));
     //printf("level 1 addr %p \n", __builtin_return_address(1));
     //do_backtrace();
-    v_r_sec(sector, buff);
+    v_r_sec(sector, (char*)buff);
     return result;
 
 #if 0
@@ -194,11 +194,11 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
-	DRESULT res;
+//	DRESULT res;
 	int result=0;
     printf("%s:pdrv=%d sec=%d count=%d\n", __func__, pdrv, sector, count);
     //do_backtrace();
-    v_w_sec(sector, buff);
+    v_w_sec(sector, (char*)buff);
     return result;
 
 #if 0
@@ -248,13 +248,12 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-    DWORD sz_drv=2048, lba, lba2, sz_eblk=1, sz_sec=512, pns = 1;
-	DRESULT res;
+    DWORD sz_drv=2048, sz_eblk=1, sz_sec=512;
 	int result=0;
     printf("%s:pdrv=%d cmd=%d\n", __func__, pdrv, cmd);
     switch(cmd){
         case GET_SECTOR_SIZE:
-            memcpy(buff, &sz_sec, sizeof(DWORD));
+            memcpy(buff, (char*)&sz_sec, sizeof(DWORD));
             break;
         case GET_BLOCK_SIZE:
             memcpy(buff, &sz_eblk, sizeof(DWORD));

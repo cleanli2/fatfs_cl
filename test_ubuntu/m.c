@@ -1,5 +1,7 @@
 #include "ff.h"
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 /*------------------------------------------------------------/
 / Open or create a file in append mode
 / (This function was sperseded by FA_OPEN_APPEND flag at FatFs R0.12a)
@@ -95,7 +97,6 @@ int main (void)
     FATFS fs;
     FIL fil;
     FRESULT res;        /* API result code */
-    UINT bw;            /* Bytes written */
     BYTE work[FF_MAX_SS]; /* Work area (larger is better for processing time) */
 
     v_init();
@@ -104,7 +105,7 @@ int main (void)
     res = f_mkfs("", 0, work, sizeof work);
     if (res){
         printf("fmkfs fail %d\n", res);
-        return;
+        return -1;
     }
     else{
         printf("fmkfs done OK\n");
