@@ -98,6 +98,7 @@ int main (void)
     FIL fil;
     FRESULT res;        /* API result code */
     BYTE work[FF_MAX_SS]; /* Work area (larger is better for processing time) */
+    UINT rn;
 
     v_init();
 
@@ -120,6 +121,12 @@ int main (void)
     f_printf(&fil, "%02u/%02u/%u, %2u:%02u\n", 3, 4, 2022, 12, 39);
 
     /* Close the file */
+    f_close(&fil);
+
+    fr = f_open(&fil, "logfile.txt", FA_READ | FA_OPEN_ALWAYS);
+    if (fr) return 1;
+    f_read(&fil, work, 100, &rn);
+    printf("rn=%d:%s\n", rn, work);
     f_close(&fil);
 
     return 0;
