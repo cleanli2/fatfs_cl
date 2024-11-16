@@ -25,8 +25,11 @@ DSTATUS disk_status (
 )
 {
 	DSTATUS stat;
-	int result;
+	int result=0;
+    printf("%s:pdrv=%d\n", __func__, pdrv);
+    return result;
 
+#if 0
 	switch (pdrv) {
 	case DEV_RAM :
 		result = RAM_disk_status();
@@ -50,6 +53,7 @@ DSTATUS disk_status (
 		return stat;
 	}
 	return STA_NOINIT;
+#endif
 }
 
 
@@ -63,8 +67,11 @@ DSTATUS disk_initialize (
 )
 {
 	DSTATUS stat;
-	int result;
+	int result=0;
+    printf("%s:pdrv=%d\n", __func__, pdrv);
+    return result;
 
+#if 0
 	switch (pdrv) {
 	case DEV_RAM :
 		result = RAM_disk_initialize();
@@ -88,6 +95,7 @@ DSTATUS disk_initialize (
 		return stat;
 	}
 	return STA_NOINIT;
+#endif
 }
 
 
@@ -104,8 +112,12 @@ DRESULT disk_read (
 )
 {
 	DRESULT res;
-	int result;
+	int result=0;
+    memset(buff, 0, 512);
+    printf("%s:pdrv=%d\n", __func__, pdrv);
+    return result;
 
+#if 0
 	switch (pdrv) {
 	case DEV_RAM :
 		// translate the arguments here
@@ -136,6 +148,7 @@ DRESULT disk_read (
 	}
 
 	return RES_PARERR;
+#endif
 }
 
 
@@ -154,8 +167,11 @@ DRESULT disk_write (
 )
 {
 	DRESULT res;
-	int result;
+	int result=0;
+    printf("%s:pdrv=%d\n", __func__, pdrv);
+    return result;
 
+#if 0
 	switch (pdrv) {
 	case DEV_RAM :
 		// translate the arguments here
@@ -186,6 +202,7 @@ DRESULT disk_write (
 	}
 
 	return RES_PARERR;
+#endif
 }
 
 #endif
@@ -202,8 +219,11 @@ DRESULT disk_ioctl (
 )
 {
 	DRESULT res;
-	int result;
+	int result=0;
+    printf("%s:pdrv=%d\n", __func__, pdrv);
+    return result;
 
+#if 0
 	switch (pdrv) {
 	case DEV_RAM :
 
@@ -225,5 +245,6 @@ DRESULT disk_ioctl (
 	}
 
 	return RES_PARERR;
+#endif
 }
 
