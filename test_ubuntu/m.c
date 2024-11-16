@@ -1,8 +1,29 @@
 #include "ff.h"
+#include <stdio.h>
 /*------------------------------------------------------------/
 / Open or create a file in append mode
 / (This function was sperseded by FA_OPEN_APPEND flag at FatFs R0.12a)
 /------------------------------------------------------------*/
+
+
+#include <execinfo.h>
+
+#define BACKTRACE_SIZ   64
+void do_backtrace()
+{
+    void    *array[BACKTRACE_SIZ];
+    size_t   size, i;
+    char   **strings;
+
+    size = backtrace(array, BACKTRACE_SIZ);
+    strings = backtrace_symbols(array, size);
+
+    for (i = 0; i < size; i++) {
+        printf("%p : %s\n", array[i], strings[i]);
+    }
+
+    free(strings);  // malloced by backtrace_symbols
+}
 
 FRESULT open_append (
     FIL* fp,            /* [OUT] File object to create */

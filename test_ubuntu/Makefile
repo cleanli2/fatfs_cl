@@ -1,7 +1,7 @@
 export CC = gcc           
 
 TARGET = fatfstest
-INC_FLAGS= -I../source
+INC_FLAGS= -I../source -g
 C_SRC= \
 m.c \
 ../source/diskio.c \
