@@ -1,2 +1,2 @@
 cd test_ubuntu
-make
+make $1
