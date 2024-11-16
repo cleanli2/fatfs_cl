@@ -94,6 +94,20 @@ int main (void)
     FRESULT fr;
     FATFS fs;
     FIL fil;
+    FRESULT res;        /* API result code */
+    UINT bw;            /* Bytes written */
+    BYTE work[FF_MAX_SS]; /* Work area (larger is better for processing time) */
+
+
+    /* Format the default drive with default parameters */
+    res = f_mkfs("", 0, work, sizeof work);
+    if (res){
+        printf("fmkfs fail %d\n", res);
+        return;
+    }
+    else{
+        printf("fmkfs done OK\n");
+    }
 
     /* Open or create a log file and ready to append */
     f_mount(&fs, "", 0);
