@@ -114,7 +114,7 @@ DRESULT disk_read (
 	DRESULT res;
 	int result=0;
     memset(buff, 0, 512);
-    printf("%s:pdrv=%d\n", __func__, pdrv);
+    printf("%s:pdrv=%d sec=%d n=%d\n", __func__, pdrv, sector, count);
     return result;
 
 #if 0
