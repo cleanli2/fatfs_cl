@@ -28,7 +28,7 @@ DSTATUS disk_status (
 	DSTATUS stat;
 	int result=0;
     printf("%s:pdrv=%d\n", __func__, pdrv);
-    do_backtrace();
+    //do_backtrace();
     return result;
 
 #if 0
@@ -71,7 +71,7 @@ DSTATUS disk_initialize (
 	DSTATUS stat;
 	int result=0;
     printf("%s:pdrv=%d\n", __func__, pdrv);
-    do_backtrace();
+    //do_backtrace();
     return result;
 
 #if 0
